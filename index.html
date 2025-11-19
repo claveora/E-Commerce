@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="Image/logo web.png">
     <style>
-        /* CSS untuk Efek Hover Garis Bawah pada Nav-Link (Tidak Diubah) */
         .nav-link {
             position: relative;
         }
@@ -19,7 +18,7 @@
             height: 2px;
             bottom: -4px;
             left: 0;
-            background-color: #78350f; /* amber-900 */
+            background-color: #78350f;
             transition: width 0.3s ease;
         }
 
@@ -27,76 +26,187 @@
         .nav-link.active::after {
             width: 100%;
         }
+
+        /* Mobile menu animation */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .mobile-menu.active {
+            max-height: 500px;
+        }
+
+        /* Sticky navbar dengan shadow */
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(to bottom right, #fff7ed, #ffffff, #fef3c7);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-sticky.scrolled {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 247, 237, 0.95);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-orange-50 via-white to-amber-50 min-h-screen">
     
-    <nav class="flex items-center justify-between px-4 sm:px-8 lg:px-16 py-6 mb-10 lg:mb-20 max-w-7xl mx-auto">
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar-sticky">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-6">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                        <div class="w-7 h-7 md:w-8 md:h-8 border-2 border-amber-100 rounded-full flex items-center justify-center relative">
+                            <img src="Image/logo web.png" class="w-5 h-5 md:w-6 md:h-6" alt="Logo">
+                            <div class="w-2 md:w-2.5 h-3 md:h-4 rounded-sm absolute bottom-0 right-0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden lg:flex items-center gap-12">
+                    <a href="#home" class="nav-link active text-base text-amber-900 font-semibold whitespace-nowrap">Home</a>
+                    <a href="#products" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Products</a>
+                    <a href="#facility" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Facility</a>
+                    <a href="#reviews" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Reviews</a>
+                </div>
+
+                <!-- Right Section -->
+                <div class="flex items-center gap-3 lg:gap-4">
+                    <!-- Search & Cart Icons (Desktop Only) -->
+                    <button class="hidden sm:flex p-2 hover:bg-amber-100 rounded-full transition-colors">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                    <button class="hidden sm:flex p-2 hover:bg-amber-100 rounded-full transition-colors">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Sign in Button -->
+                    <button class="px-5 py-2.5 sm:px-6 sm:py-2.5 lg:px-8 lg:py-3 bg-amber-900 text-white text-sm lg:text-base rounded-full hover:bg-amber-800 transition-all duration-300 hover:shadow-lg transform hover:scale-105 whitespace-nowrap">
+                        Sign in
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="lg:hidden p-2 hover:bg-amber-100 rounded-lg transition-colors">
+                        <svg id="menu-icon" class="w-6 h-6 text-amber-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu lg:hidden">
+                <div class="pt-4 pb-3 space-y-2">
+                    <a href="#home" class="block px-4 py-2.5 text-amber-900 font-semibold hover:bg-amber-100 rounded-lg transition-colors">Home</a>
+                    <a href="#products" class="block px-4 py-2.5 text-gray-600 hover:bg-amber-100 hover:text-amber-900 rounded-lg transition-colors">Products</a>
+                    <a href="#facility" class="block px-4 py-2.5 text-gray-600 hover:bg-amber-100 hover:text-amber-900 rounded-lg transition-colors">Facility</a>
+                    <a href="#reviews" class="block px-4 py-2.5 text-gray-600 hover:bg-amber-100 hover:text-amber-900 rounded-lg transition-colors">Reviews</a>
+                    
+                    <!-- Mobile Icons -->
+                    <div class="flex items-center gap-3 px-4 pt-3 sm:hidden border-t border-gray-200 mt-2">
+                        <button class="p-2 hover:bg-amber-100 rounded-full transition-colors">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        <button class="p-2 hover:bg-amber-100 rounded-full transition-colors">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main id="home" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
         
-        <div class="flex items-center gap-2">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 border-2 border-amber-100 rounded-full flex items-center justify-center relative">
-                    <img src="Image/logo web.png" class="w-5 h-5 sm:w-6 sm:h-6" alt="Logo">
-                    <div class="w-2 h-3 rounded-sm absolute bottom-0 right-0"></div>
+        <!-- Desktop & Tablet Layout -->
+        <div class="hidden md:grid md:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[70vh]">
+            
+            <!-- Left Side - Coffee Image -->
+            <div class="relative h-full flex items-end justify-center lg:justify-start">
+                <img src="Image/kopi.png" alt="Coffee cups" class="w-full max-w-xs md:max-w-sm lg:max-w-md object-contain">
+            </div>
+
+            <!-- Right Side - Content -->
+            <div class="space-y-6 lg:space-y-8">
+                <h1 class="text-5xl lg:text-7xl xl:text-8xl font-bold text-amber-900 leading-tight">
+                    Nikmati<br>
+                    Lezatnya Kopimu
+                </h1>
+                
+                <p class="text-gray-600 text-lg lg:text-xl leading-relaxed max-w-xl">
+                    Membuatmu bersemangat dan membangun suasana hati dengan secangkir kopi di pagi hari, 100% alami dari kebun.
+                </p>
+
+                <div class="pt-2">
+                    <button class="group inline-flex items-center gap-3 px-8 py-4 bg-amber-900 text-white rounded-full hover:bg-amber-800 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                        <span class="text-lg font-medium">Pesan Sekarang</span>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                            <svg class="w-5 h-5 text-amber-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="hidden md:flex items-center gap-6 lg:gap-12">
-            <a href="#" class="nav-link active text-sm lg:text-base text-amber-900 font-semibold">Home</a>
-            <a href="#" class="nav-link text-sm lg:text-base text-gray-600 hover:text-amber-900 transition-colors">Products</a>
-            <a href="#" class="nav-link text-sm lg:text-base text-gray-600 hover:text-amber-900 transition-colors">Facility</a>
-            <a href="#" class="nav-link text-sm lg:text-base text-gray-600 hover:text-amber-900 transition-colors">Reviews</a>
-        </div>
+        <!-- Mobile Layout (Stats first, then content, then image) -->
+        <div class="md:hidden space-y-8">
 
-        <div class="flex items-center gap-2 sm:gap-4">
-            <button class="hidden sm:block p-2 hover:bg-amber-100 rounded-full transition-colors">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </button>
-            <button class="hidden sm:block p-2 hover:bg-amber-100 rounded-full transition-colors">
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-            </button>
-
-            <button class="px-3 py-2 sm:px-5 sm:py-2 md:px-8 md:py-3 bg-amber-900 text-white text-sm sm:text-base rounded-full hover:bg-amber-800 transition-all duration-300 hover:shadow-lg transform hover:scale-105">
-                Sign in
-            </button>
+            <!-- Coffee Image (Mobile - Shown Last) -->
+            <div class="flex justify-center pt-4">
+                <img src="Image/kopi.png" alt="Coffee cups" class="w-full max-w-xs object-contain">
+            </div>
             
-            <button class="md:hidden p-2 hover:bg-amber-100 rounded-full transition-colors">
-                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-        </div>
-    </nav>
-    
-    <hr class="max-w-7xl mx-auto border-t border-gray-100 hidden lg:block">
-
-    <div class="px-4 sm:px-8 lg:px-16 py-8 sm:py-12">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[60vh]">
-            
-            <div class="order-last lg:order-first relative h-60 sm:h-96 lg:h-full flex justify-center lg:justify-start">
-                <img src="Image/kopi.png" alt="kopi" class="object-contain w-full max-w-sm sm:max-w-md lg:max-w-none lg:w-4/4 lg:absolute bottom-0 left-0">
+            <!-- Stats Section (Mobile - Shown First) -->
+            <div class="flex justify-center gap-8 pt-4">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-amber-900">1K+</div>
+                    <div class="text-amber-800 text-sm mt-1">Reviews</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-amber-900">3k+</div>
+                    <div class="text-amber-800 text-sm mt-1">Best Sell</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-amber-900">150+</div>
+                    <div class="text-amber-800 text-sm mt-1">Menu</div>
+                </div>
             </div>
 
-            <div class="order-first lg:order-last space-y-4 sm:space-y-6 pt-4 lg:pt-0">
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-amber-900 leading-tight">
-                    Enjoy Your<br class="hidden sm:block">
-                    Morning Coffee
+            <!-- Content Section -->
+            <div class="space-y-5 text-center px-2">
+                <h1 class="text-4xl sm:text-5xl font-bold text-amber-900 leading-tight">
+                    Nikmati<br>
+                    Lezatnya Kopimu
                 </h1>
                 
-                <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl">
-                    Boost your productivity and build your mood with a glass of coffee in the morning, 100% natural from garden.
+                <p class="text-gray-600 text-base leading-relaxed">
+                    Membuatmu bersemangat dan membangun suasana hati dengan secangkir kopi di pagi hari, 100% alami dari kebun.
                 </p>
 
-                <div class="pt-2 sm:pt-4">
-                    <button class="group inline-flex items-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-amber-900 text-white rounded-full hover:bg-amber-800 transition-all duration-300 hover:shadow-2xl hover:scale-105">
-                        <span class="text-base sm:text-lg font-medium">Order Now</span>
-                        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="pt-2">
+                    <button class="group inline-flex items-center gap-2 px-7 py-3.5 bg-amber-900 text-white rounded-full hover:bg-amber-800 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                        <span class="text-base font-medium">Pesan Sekarang</span>
+                        <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                            <svg class="w-4 h-4 text-amber-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </div>
@@ -104,23 +214,64 @@
                 </div>
             </div>
 
+            
         </div>
 
-        <div class="max-w-7xl mx-auto mt-12 sm:mt-20 flex flex-wrap justify-between md:justify-start gap-8 sm:gap-16 lg:gap-32">
-            <div class="flex-1 min-w-[30%] sm:min-w-0">
-                <div class="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-900">1K+</div>
-                <div class="text-amber-800 text-base sm:text-lg mt-1 sm:mt-2">Reviews</div>
+        <!-- Desktop & Tablet Stats (Hidden on Mobile) -->
+        <div class="hidden md:flex justify-start gap-16 lg:gap-24 xl:gap-32 mt-16 lg:mt-24">
+            <div class="text-left">
+                <div class="text-5xl lg:text-6xl xl:text-7xl font-bold text-amber-900">1K+</div>
+                <div class="text-amber-800 text-lg lg:text-xl mt-2">Reviews</div>
             </div>
-            <div class="flex-1 min-w-[30%] sm:min-w-0">
-                <div class="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-900">3k+</div>
-                <div class="text-amber-800 text-base sm:text-lg mt-1 sm:mt-2">Best Sell</div>
+            <div class="text-left">
+                <div class="text-5xl lg:text-6xl xl:text-7xl font-bold text-amber-900">3k+</div>
+                <div class="text-amber-800 text-lg lg:text-xl mt-2">Best Sell</div>
             </div>
-            <div class="flex-1 min-w-[30%] sm:min-w-0">
-                <div class="text-4xl sm:text-5xl lg:text-6xl font-bold text-amber-900">150+</div>
-                <div class="text-amber-800 text-base sm:text-lg mt-1 sm:mt-2">Menu</div>
+            <div class="text-left">
+                <div class="text-5xl lg:text-6xl xl:text-7xl font-bold text-amber-900">150+</div>
+                <div class="text-amber-800 text-lg lg:text-xl mt-2">Menu</div>
             </div>
         </div>
-    </div>
-    <script src="Script.js"></script>
+
+    </main>
+
+    <script>
+        // Sticky navbar dengan shadow saat scroll
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            
+            // Toggle icon
+            if (mobileMenu.classList.contains('active')) {
+                menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+            } else {
+                menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+            }
+        });
+
+        // Close mobile menu saat klik link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+            });
+        });
+    </script>
+
 </body>
 </html>
