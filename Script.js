@@ -1,6 +1,188 @@
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
+// Cart functionality
+    let cart = [];
+    let cartCount = 0;
 
-mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-});
+    function addToCart(productName, price) {
+        cart.push({ name: productName, price: price });
+        cartCount++;
+        updateCartDisplay();
+        showNotification(`${productName} ditambahkan ke keranjang!`);
+    }
+
+    function updateCartDisplay() {
+        const cartBadge = document.getElementById('cart-count');
+        if (cartCount > 0) {
+            cartBadge.textContent = cartCount;
+            cartBadge.style.display = 'flex';
+        } else {
+            cartBadge.style.display = 'none';
+        }
+    }
+
+    function showNotification(message) {
+        // Simple notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-24 right-4 bg-amber-900 text-white px-6 py-3 rounded-full shadow-lg z-50 animate-fade-in';
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Category filter
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const productCards = document.querySelectorAll('.product-card');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.getAttribute('data-category');
+            
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            productCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Testimonial slider
+    let currentTestimonial = 0;
+    const testimonialSlider = document.getElementById('testimonial-slider');
+    const testimonialDots = document.querySelectorAll('.testimonial-dot');
+    const totalTestimonials = 3;
+
+    function showTestimonial(index) {
+        currentTestimonial = index;
+        testimonialSlider.style.transform = `translateX(-${index * 100}%)`;
+        
+        testimonialDots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.remove('bg-gray-300');
+                dot.classList.add('bg-amber-900');
+            } else {
+                dot.classList.remove('bg-amber-900');
+                dot.classList.add('bg-gray-300');
+            }
+        });
+    }
+
+    document.getElementById('prev-testimonial').addEventListener('click', () => {
+        const newIndex = currentTestimonial === 0 ? totalTestimonials - 1 : currentTestimonial - 1;
+        showTestimonial(newIndex);
+    });
+
+    document.getElementById('next-testimonial').addEventListener('click', () => {
+        const newIndex = currentTestimonial === totalTestimonials - 1 ? 0 : currentTestimonial + 1;
+        showTestimonial(newIndex);
+    });
+
+    testimonialDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => showTestimonial(index));
+    });
+
+    // Auto-play testimonials
+    setInterval(() => {
+        const newIndex = currentTestimonial === totalTestimonials - 1 ? 0 : currentTestimonial + 1;
+        showTestimonial(newIndex);
+    }, 5000);
+
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        
+        if (mobileMenu.classList.contains('active')) {
+            menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+        } else {
+            menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        }
+    });
+
+    // Close mobile menu when clicking links
+    const mobileLinks = mobileMenu.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        });
+    });
+
+    // Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Modal functions
+    function openModal(productName, description, price, imageSrc) {
+        const modal = document.getElementById('product-modal');
+        document.getElementById('modal-title').textContent = productName;
+        document.getElementById('modal-description').textContent = description;
+        document.getElementById('modal-price').textContent = `Rp. ${price.toLocaleString()}`;
+        document.getElementById('modal-image').src = imageSrc;
+        
+        document.getElementById('modal-add-btn').onclick = () => {
+            addToCart(productName, price);
+            closeModal();
+        };
+        
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('product-modal').classList.remove('active');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('product-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'product-modal') {
+            closeModal();
+        }
+    });
