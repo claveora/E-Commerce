@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota Pesanan - Caveokka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="Image/logo web.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 untuk alert yang lebih menarik -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .container-nota {
+            min-height: calc(100vh - 120px); /* Memperhitungkan navbar dan footer */
+        }
+        .btn-qty {
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .btn-qty:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+        .item-card {
+            transition: transform 0.2s ease;
+        }
+        .item-card:hover {
+            transform: translateY(-2px);
+            
+        }
+         .footer-link {
+            position: relative;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #D4A574;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2);
+            color: #D4A574;
+        }
+
+        .divider-line {
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            height: 1px;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2416 100%);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800">
+    <!-- Navbar Sederhana (sesuaikan dengan index.html) -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <img src="Image/logo web.png" alt="Caveokka Logo" class="h-8 w-auto">
+                        <span class="text-xl font-bold text-[#78350f]">Caveokka</span>
+                    </a>
+                </div>
+                <!-- Tautan Kembali & Keranjang Mobile -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-[#78350f] transition duration-150 text-sm font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Kembali Belanja
+                    </a>
+                    <!-- Ikon Keranjang (Mobile Only) -->
+                    <a href="nota.html" class="relative p-2 rounded-full text-gray-600 hover:bg-gray-100 hover:text-[#78350f] md:hidden" aria-label="Nota Pesanan">
+                        <i class="fas fa-receipt text-xl"></i>
+                        <span id="cart-count-mobile" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 container-nota">
+        <h1 class="text-3xl font-bold text-[#78350f] mb-8 border-b pb-2">Nota Pesanan Anda</h1>
+
+        <div id="nota-container" class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+            
+            <!-- Daftar Item Pesanan -->
+            <div id="items-list" class="space-y-4">
+                <!-- Item-item akan dirender di sini oleh JavaScript -->
+            </div>
+            
+            <!-- Pesan Keranjang Kosong -->
+            <div id="empty-cart-message-nota" class="text-center py-10 text-gray-500 text-lg hidden">
+                Keranjang Anda kosong. <a href="index.html" class="text-[#92400e] hover:underline">Ayo mulai berbelanja!</a>
+            </div>
+
+            <!-- Ringkasan Total -->
+            <div class="mt-8 pt-4 border-t border-gray-200">
+                <div class="flex justify-between items-center text-xl font-semibold mb-3">
+                    <span>Subtotal:</span>
+                    <span id="subtotal-display">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center text-xl font-semibold mb-4">
+                    <span>Biaya Layanan (5%):</span>
+                    <span id="service-fee-display">Rp 0</span>
+                </div>
+                <div class="flex justify-between items-center text-2xl font-bold text-[#78350f] border-t pt-4">
+                    <span>TOTAL BAYAR:</span>
+                    <span id="grand-total-display">Rp 0</span>
+                </div>
+            </div>
+
+            <!-- Tombol Bayar -->
+            <div class="mt-8">
+                <button id="pay-button" class="w-full py-4 rounded-xl bg-green-600 text-white text-xl font-bold hover:bg-green-700 transition duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fas fa-wallet mr-2"></i> Bayar Sekarang
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="text-white pt-16 pb-8 rounded-t-[60px]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+                <div class="flex flex-col items-start">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 rounded-lg flex items-center justify-center">
+                            <img src="Image/logo web.png" class="size-[60px]">
+                        </div>
+                        <span class="text-2xl font-bold text-white">Caveokka</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-6">Program</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Edukasi Kopi Nusantara</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Pelatihan Barista</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Festival Kopi</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Pemberdayaan Para Kalcer</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-6">Inisiatif</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Jejak Kopi Indonesia</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Kopi & Kearifan Lokal</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Kampanye Kopi</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Kolaborasi UMKM</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-6">Komunitas</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Gabung Caveokka</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Cerita Caveooka</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Event Caveokka</a></li>
+                        <li><a href="#" class="footer-link text-gray-300 text-sm">Forum Kalcer</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="divider-line my-10"></div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-gray-400 text-sm">
+                    © 2025 Caveokka.
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <a href="#" class="social-icon text-gray-300 hover:text-white" title="TikTok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.68v13.7a2.4 2.4 0 1 1-4.77-1.24V8.55a6.49 6.49 0 0 0-6.64 6.61c0 3.63 2.99 6.58 6.66 6.58 3.59 0 6.66-2.95 6.66-6.61V9.08c1.29 1 3.39 1.58 5.37 1.58v-3.72a4.85 4.85 0 0 1-1.77-.35z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-gray-300 hover:text-white" title="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <circle cx="17.5" cy="6.5" r="1.5"></circle>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-gray-300 hover:text-white" title="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-gray-300 hover:text-white" title="X (Twitter)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.207-6.807-5.969 6.807H2.422l7.723-8.835L1.08 2.25h6.82l4.77 6.312 5.45-6.312zM16.6 19.5h1.832L7.06 4.148H5.066L16.6 19.5z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="social-icon text-gray-300 hover:text-white" title="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="text-gray-400 text-sm text-center md:text-right">
+                    Kopi adalah jati diri para penikmat kopi.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Variabel global
+        let cart = [];
+        const SERVICE_FEE_RATE = 0.05; // 5%
+
+        // Elemen DOM
+        const itemsList = document.getElementById('items-list');
+        const emptyCartMessageNota = document.getElementById('empty-cart-message-nota');
+        const subtotalDisplay = document.getElementById('subtotal-display');
+        const serviceFeeDisplay = document.getElementById('service-fee-display');
+        const grandTotalDisplay = document.getElementById('grand-total-display');
+        const payButton = document.getElementById('pay-button');
+        const cartCountMobile = document.getElementById('cart-count-mobile');
+
+        // --- Fungsi Helper ---
+
+        /**
+         * Memuat data keranjang dari LocalStorage.
+         * @returns {Array} Data keranjang.
+         */
+        function loadCartFromLocalStorage() {
+            try {
+                const storedCart = localStorage.getItem('caveokkaCart');
+                return storedCart ? JSON.parse(storedCart) : [];
+            } catch (e) {
+                console.error("Gagal memuat keranjang dari LocalStorage:", e);
+                return [];
+            }
+        }
+
+        /**
+         * Menyimpan data keranjang saat ini ke LocalStorage.
+         */
+        function saveCartToLocalStorage() {
+            try {
+                localStorage.setItem('caveokkaCart', JSON.stringify(cart));
+            } catch (e) {
+                console.error("Gagal menyimpan keranjang ke LocalStorage:", e);
+            }
+        }
+
+        /**
+         * Mengubah format angka menjadi mata uang Rupiah.
+         * @param {number} amount - Jumlah uang.
+         * @returns {string} - String berformat Rupiah.
+         */
+        function formatRupiah(amount) {
+            return 'Rp ' + amount.toLocaleString('id-ID');
+        }
+
+        // --- Fungsi Utama Nota ---
+
+        /**
+         * Mengubah kuantitas produk di keranjang.
+         * @param {string} productName - Nama produk.
+         * @param {number} delta - Jumlah perubahan kuantitas (1 untuk tambah, -1 untuk kurang).
+         */
+        window.changeQuantity = function(productName, delta) {
+            const itemIndex = cart.findIndex(item => item.name === productName);
+
+            if (itemIndex > -1) {
+                const item = cart[itemIndex];
+                item.quantity += delta;
+
+                if (item.quantity <= 0) {
+                    // Hapus item jika kuantitas <= 0
+                    cart.splice(itemIndex, 1);
+                }
+                
+                // Simpan perubahan dan render ulang
+                saveCartToLocalStorage();
+                renderNotaItems();
+            }
+        };
+
+        /**
+         * Menghitung dan menampilkan total keseluruhan.
+         */
+        function calculateAndDisplayTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const serviceFee = Math.round(subtotal * SERVICE_FEE_RATE);
+            const grandTotal = subtotal + serviceFee;
+            const totalItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+            subtotalDisplay.textContent = formatRupiah(subtotal);
+            serviceFeeDisplay.textContent = formatRupiah(serviceFee);
+            grandTotalDisplay.textContent = formatRupiah(grandTotal);
+            cartCountMobile.textContent = totalItemCount.toString();
+
+            // Atur status tombol Bayar dan pesan kosong
+            if (cart.length === 0) {
+                emptyCartMessageNota.classList.remove('hidden');
+                payButton.disabled = true;
+                payButton.textContent = 'Keranjang Kosong';
+                itemsList.innerHTML = '';
+            } else {
+                emptyCartMessageNota.classList.add('hidden');
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="fas fa-wallet mr-2"></i> Bayar Sekarang';
+            }
+        }
+
+        /**
+         * Merender daftar item pesanan di halaman nota.
+         */
+        function renderNotaItems() {
+            itemsList.innerHTML = ''; // Kosongkan container
+
+            if (cart.length === 0) {
+                calculateAndDisplayTotals();
+                return;
+            }
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item-card flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:border-[#92400e]/30';
+                
+                itemElement.innerHTML = `
+                    <div class="flex-grow w-full sm:w-auto mb-3 sm:mb-0">
+                        <span class="font-bold text-lg text-gray-800">${item.name}</span>
+                        <p class="text-sm text-gray-500">Harga Satuan: ${formatRupiah(item.price)}</p>
+                    </div>
+
+                    <div class="flex items-center space-x-4 w-full sm:w-auto">
+                        <!-- Kontrol Kuantitas -->
+                        <div class="flex items-center space-x-1 border border-gray-300 rounded-lg p-1">
+                            <button onclick="changeQuantity('${item.name}', -1)" 
+                                    class="btn-qty text-red-500 hover:text-white hover:bg-red-500 bg-gray-50 rounded-md w-8 h-8 flex items-center justify-center transition" aria-label="Kurangi ${item.name}">
+                                <i class="fas fa-minus text-sm"></i>
+                            </button>
+                            <span class="font-bold text-base w-6 text-center">${item.quantity}</span>
+                            <button onclick="changeQuantity('${item.name}', 1)" 
+                                    class="btn-qty text-green-500 hover:text-white hover:bg-green-500 bg-gray-50 rounded-md w-8 h-8 flex items-center justify-center transition" aria-label="Tambah ${item.name}">
+                                <i class="fas fa-plus text-sm"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Subtotal Item -->
+                        <div class="text-right ml-4">
+                            <span class="text-lg font-bold text-[#78350f] whitespace-nowrap">${formatRupiah(subtotal)}</span>
+                        </div>
+                    </div>
+                `;
+                itemsList.appendChild(itemElement);
+            });
+
+            calculateAndDisplayTotals();
+        }
+
+        /**
+         * Logika untuk tombol Bayar (menggunakan SweetAlert2).
+         */
+        payButton.addEventListener('click', async () => {
+            if (cart.length === 0) return;
+
+            const totalAmount = grandTotalDisplay.textContent;
+
+            const { isConfirmed } = await Swal.fire({
+                title: 'Konfirmasi Pembayaran',
+                html: `Anda akan membayar total: <br><strong class="text-2xl text-green-600">${totalAmount}</strong>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981', // green-500
+                cancelButtonColor: '#ef4444', // red-500
+                confirmButtonText: 'Ya, Bayar Sekarang!',
+                cancelButtonText: 'Batalkan',
+                reverseButtons: true
+            });
+
+            if (isConfirmed) {
+                // Simulasikan proses pembayaran
+                payButton.disabled = true;
+                payButton.textContent = 'Memproses Pembayaran...';
+
+                // Tunggu sebentar (simulasi loading)
+                await new Promise(resolve => setTimeout(resolve, 1500)); 
+
+                // Menampilkan Sweet Alert Sukses
+                Swal.fire({
+                    title: 'Pembayaran Sukses!',
+                    text: `Terima kasih! Pesanan Anda sebesar ${totalAmount} telah berhasil dibayar.`,
+                    icon: 'success',
+                    confirmButtonColor: '#78350f', // Warna khas Caveokka
+                    confirmButtonText: 'Selesai & Tutup Nota'
+                }).then(() => {
+                    // Kosongkan keranjang setelah pembayaran
+                    cart = [];
+                    saveCartToLocalStorage();
+                    renderNotaItems();
+                    
+                    // Arahkan kembali ke halaman utama setelah 2 detik
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                });
+            }
+        });
+
+        // --- Inisialisasi ---
+        document.addEventListener('DOMContentLoaded', () => {
+            cart = loadCartFromLocalStorage();
+            renderNotaItems();
+        });
+
+    </script>
+</body>
+</html>
