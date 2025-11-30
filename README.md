@@ -56,8 +56,13 @@ Anda hanya memerlukan browser web modern (seperti Chrome, Firefox, atau Edge).
 
 📁 Struktur Proyek
 ------------------
-E-Commerce/ ├── index.html # Halaman utama (Home & Katalog Produk) ├── Script.js # Logika JavaScript utama (Cart, Modal, Filter) ├── Pembayaran/ # Folder berisi halaman checkout │ ├── nota.html # Halaman nota/keranjang/checkout │ └── nota.js # Logika spesifik untuk halaman nota ├── Image/ # Folder aset gambar (Logo, Produk, dll.) └── README.md # File yang sedang Anda baca
-
+E-Commerce/
+├── index.html # Halaman utama (Home & Katalog Produk)
+├── Script.js # Logika JavaScript utama (Cart, Modal, Filter) 
+├── Pembayaran/ # Folder berisi halaman checkout 
+    │ ├── nota.html # Halaman nota/keranjang/checkout 
+    │ └── nota.js # Logika spesifik untuk halaman nota 
+├── Image/ # Folder aset gambar (Logo, Produk, dll.) 
 
 ---------------------------------------------------------------------------------
 
