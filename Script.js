@@ -1,35 +1,48 @@
-// Cart functionality
-    let cart = [];
-    let cartCount = 0;
+// --- Script.js (Update Bagian Cart) ---
 
-    function addToCart(productName, price) {
-        cart.push({ name: productName, price: price });
-        cartCount++;
-        updateCartDisplay();
-        showNotification(`${productName} ditambahkan ke keranjang!`);
+// 1. Ambil data lama jika ada saat halaman di-load
+let cart = JSON.parse(localStorage.getItem('caveokkaCart')) || [];
+
+// Fungsi bantu hitung total item untuk badge
+function getCartCount() {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+}
+
+// Update tampilan badge saat pertama kali load
+document.addEventListener('DOMContentLoaded', () => {
+    updateCartDisplay();
+});
+
+function addToCart(productName, price) {
+    // Cek apakah produk sudah ada di cart
+    const existingItem = cart.find(item => item.name === productName);
+
+    if (existingItem) {
+        // Jika ada, tambahkan jumlahnya (quantity)
+        existingItem.quantity += 1;
+    } else {
+        // Jika belum ada, masukkan sebagai item baru
+        cart.push({ name: productName, price: price, quantity: 1 });
     }
 
-    function updateCartDisplay() {
-        const cartBadge = document.getElementById('cart-count');
-        if (cartCount > 0) {
-            cartBadge.textContent = cartCount;
-            cartBadge.style.display = 'flex';
-        } else {
-            cartBadge.style.display = 'none';
-        }
-    }
+    // PENTING: Simpan ke LocalStorage agar bisa dibaca di nota.html
+    localStorage.setItem('caveokkaCart', JSON.stringify(cart));
+    
+    updateCartDisplay();
+    showNotification(`${productName} ditambahkan ke keranjang!`);
+}
 
-    function showNotification(message) {
-        // Simple notification
-        const notification = document.createElement('div');
-        notification.className = 'fixed top-24 right-4 bg-amber-900 text-white px-6 py-3 rounded-full shadow-lg z-50 animate-fade-in';
-        notification.textContent = message;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+function updateCartDisplay() {
+    const cartBadge = document.getElementById('cart-count');
+    const totalCount = getCartCount(); // Hitung total dari quantity
+
+    if (totalCount > 0) {
+        cartBadge.textContent = totalCount;
+        cartBadge.style.display = 'flex';
+    } else {
+        cartBadge.style.display = 'none';
     }
+}
 
     // Category filter
     const categoryButtons = document.querySelectorAll('.category-btn');

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nota Pesanan - Caveokka</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="Image/logo web.png">
+    <link rel="icon" type="image/png" href="../Image/logo web.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- SweetAlert2 untuk alert yang lebih menarik -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -70,13 +70,13 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0">
                     <a href="index.html" class="flex items-center space-x-2">
-                        <img src="Image/logo web.png" alt="Caveokka Logo" class="h-8 w-auto">
+                        <img src="../Image/logo web.png" alt="Caveokka Logo" class="h-8 w-auto">
                         <span class="text-xl font-bold text-[#78350f]">Caveokka</span>
                     </a>
                 </div>
                 <!-- Tautan Kembali & Keranjang Mobile -->
                 <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-gray-600 hover:text-[#78350f] transition duration-150 text-sm font-medium">
+                    <a href="../index.html" class="text-gray-600 hover:text-[#78350f] transition duration-150 text-sm font-medium">
                         <i class="fas fa-arrow-left mr-1"></i> Kembali Belanja
                     </a>
                     <!-- Ikon Keranjang (Mobile Only) -->
@@ -101,7 +101,7 @@
             
             <!-- Pesan Keranjang Kosong -->
             <div id="empty-cart-message-nota" class="text-center py-10 text-gray-500 text-lg hidden">
-                Keranjang Anda kosong. <a href="index.html" class="text-[#92400e] hover:underline">Ayo mulai berbelanja!</a>
+                Keranjang Anda kosong. <a href="index.html" class="text-[#92400e] hover:underline">Silahkan untuk berbelanja!</a>
             </div>
 
             <!-- Ringkasan Total -->
@@ -129,13 +129,14 @@
         </div>
     </main>
     
+    <!-- Footer -->
     <footer class="text-white pt-16 pb-8 rounded-t-[60px]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
                 <div class="flex flex-col items-start">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-12 h-12 rounded-lg flex items-center justify-center">
-                            <img src="Image/logo web.png" class="size-[60px]">
+                            <img src="../Image/logo web.png" class="size-[60px]">
                         </div>
                         <span class="text-2xl font-bold text-white">Caveokka</span>
                     </div>
@@ -216,211 +217,7 @@
         </div>
     </footer>
 
-    <script>
-        // Variabel global
-        let cart = [];
-        const SERVICE_FEE_RATE = 0.05; // 5%
-
-        // Elemen DOM
-        const itemsList = document.getElementById('items-list');
-        const emptyCartMessageNota = document.getElementById('empty-cart-message-nota');
-        const subtotalDisplay = document.getElementById('subtotal-display');
-        const serviceFeeDisplay = document.getElementById('service-fee-display');
-        const grandTotalDisplay = document.getElementById('grand-total-display');
-        const payButton = document.getElementById('pay-button');
-        const cartCountMobile = document.getElementById('cart-count-mobile');
-
-        // --- Fungsi Helper ---
-
-        /**
-         * Memuat data keranjang dari LocalStorage.
-         * @returns {Array} Data keranjang.
-         */
-        function loadCartFromLocalStorage() {
-            try {
-                const storedCart = localStorage.getItem('caveokkaCart');
-                return storedCart ? JSON.parse(storedCart) : [];
-            } catch (e) {
-                console.error("Gagal memuat keranjang dari LocalStorage:", e);
-                return [];
-            }
-        }
-
-        /**
-         * Menyimpan data keranjang saat ini ke LocalStorage.
-         */
-        function saveCartToLocalStorage() {
-            try {
-                localStorage.setItem('caveokkaCart', JSON.stringify(cart));
-            } catch (e) {
-                console.error("Gagal menyimpan keranjang ke LocalStorage:", e);
-            }
-        }
-
-        /**
-         * Mengubah format angka menjadi mata uang Rupiah.
-         * @param {number} amount - Jumlah uang.
-         * @returns {string} - String berformat Rupiah.
-         */
-        function formatRupiah(amount) {
-            return 'Rp ' + amount.toLocaleString('id-ID');
-        }
-
-        // --- Fungsi Utama Nota ---
-
-        /**
-         * Mengubah kuantitas produk di keranjang.
-         * @param {string} productName - Nama produk.
-         * @param {number} delta - Jumlah perubahan kuantitas (1 untuk tambah, -1 untuk kurang).
-         */
-        window.changeQuantity = function(productName, delta) {
-            const itemIndex = cart.findIndex(item => item.name === productName);
-
-            if (itemIndex > -1) {
-                const item = cart[itemIndex];
-                item.quantity += delta;
-
-                if (item.quantity <= 0) {
-                    // Hapus item jika kuantitas <= 0
-                    cart.splice(itemIndex, 1);
-                }
-                
-                // Simpan perubahan dan render ulang
-                saveCartToLocalStorage();
-                renderNotaItems();
-            }
-        };
-
-        /**
-         * Menghitung dan menampilkan total keseluruhan.
-         */
-        function calculateAndDisplayTotals() {
-            const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            const serviceFee = Math.round(subtotal * SERVICE_FEE_RATE);
-            const grandTotal = subtotal + serviceFee;
-            const totalItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-
-            subtotalDisplay.textContent = formatRupiah(subtotal);
-            serviceFeeDisplay.textContent = formatRupiah(serviceFee);
-            grandTotalDisplay.textContent = formatRupiah(grandTotal);
-            cartCountMobile.textContent = totalItemCount.toString();
-
-            // Atur status tombol Bayar dan pesan kosong
-            if (cart.length === 0) {
-                emptyCartMessageNota.classList.remove('hidden');
-                payButton.disabled = true;
-                payButton.textContent = 'Keranjang Kosong';
-                itemsList.innerHTML = '';
-            } else {
-                emptyCartMessageNota.classList.add('hidden');
-                payButton.disabled = false;
-                payButton.innerHTML = '<i class="fas fa-wallet mr-2"></i> Bayar Sekarang';
-            }
-        }
-
-        /**
-         * Merender daftar item pesanan di halaman nota.
-         */
-        function renderNotaItems() {
-            itemsList.innerHTML = ''; // Kosongkan container
-
-            if (cart.length === 0) {
-                calculateAndDisplayTotals();
-                return;
-            }
-
-            cart.forEach(item => {
-                const subtotal = item.price * item.quantity;
-                const itemElement = document.createElement('div');
-                itemElement.className = 'item-card flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:border-[#92400e]/30';
-                
-                itemElement.innerHTML = `
-                    <div class="flex-grow w-full sm:w-auto mb-3 sm:mb-0">
-                        <span class="font-bold text-lg text-gray-800">${item.name}</span>
-                        <p class="text-sm text-gray-500">Harga Satuan: ${formatRupiah(item.price)}</p>
-                    </div>
-
-                    <div class="flex items-center space-x-4 w-full sm:w-auto">
-                        <!-- Kontrol Kuantitas -->
-                        <div class="flex items-center space-x-1 border border-gray-300 rounded-lg p-1">
-                            <button onclick="changeQuantity('${item.name}', -1)" 
-                                    class="btn-qty text-red-500 hover:text-white hover:bg-red-500 bg-gray-50 rounded-md w-8 h-8 flex items-center justify-center transition" aria-label="Kurangi ${item.name}">
-                                <i class="fas fa-minus text-sm"></i>
-                            </button>
-                            <span class="font-bold text-base w-6 text-center">${item.quantity}</span>
-                            <button onclick="changeQuantity('${item.name}', 1)" 
-                                    class="btn-qty text-green-500 hover:text-white hover:bg-green-500 bg-gray-50 rounded-md w-8 h-8 flex items-center justify-center transition" aria-label="Tambah ${item.name}">
-                                <i class="fas fa-plus text-sm"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Subtotal Item -->
-                        <div class="text-right ml-4">
-                            <span class="text-lg font-bold text-[#78350f] whitespace-nowrap">${formatRupiah(subtotal)}</span>
-                        </div>
-                    </div>
-                `;
-                itemsList.appendChild(itemElement);
-            });
-
-            calculateAndDisplayTotals();
-        }
-
-        /**
-         * Logika untuk tombol Bayar (menggunakan SweetAlert2).
-         */
-        payButton.addEventListener('click', async () => {
-            if (cart.length === 0) return;
-
-            const totalAmount = grandTotalDisplay.textContent;
-
-            const { isConfirmed } = await Swal.fire({
-                title: 'Konfirmasi Pembayaran',
-                html: `Anda akan membayar total: <br><strong class="text-2xl text-green-600">${totalAmount}</strong>`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#10b981', // green-500
-                cancelButtonColor: '#ef4444', // red-500
-                confirmButtonText: 'Ya, Bayar Sekarang!',
-                cancelButtonText: 'Batalkan',
-                reverseButtons: true
-            });
-
-            if (isConfirmed) {
-                // Simulasikan proses pembayaran
-                payButton.disabled = true;
-                payButton.textContent = 'Memproses Pembayaran...';
-
-                // Tunggu sebentar (simulasi loading)
-                await new Promise(resolve => setTimeout(resolve, 1500)); 
-
-                // Menampilkan Sweet Alert Sukses
-                Swal.fire({
-                    title: 'Pembayaran Sukses!',
-                    text: `Terima kasih! Pesanan Anda sebesar ${totalAmount} telah berhasil dibayar.`,
-                    icon: 'success',
-                    confirmButtonColor: '#78350f', // Warna khas Caveokka
-                    confirmButtonText: 'Selesai & Tutup Nota'
-                }).then(() => {
-                    // Kosongkan keranjang setelah pembayaran
-                    cart = [];
-                    saveCartToLocalStorage();
-                    renderNotaItems();
-                    
-                    // Arahkan kembali ke halaman utama setelah 2 detik
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                });
-            }
-        });
-
-        // --- Inisialisasi ---
-        document.addEventListener('DOMContentLoaded', () => {
-            cart = loadCartFromLocalStorage();
-            renderNotaItems();
-        });
-
+    <script src="nota.js">
     </script>
 </body>
 </html>
