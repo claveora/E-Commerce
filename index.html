@@ -35,14 +35,14 @@
         }
 
         .mobile-menu.active {
-            max-height: 500px;
+            max-height: 800px; 
         }
 
         .navbar-sticky {
             position: sticky;
             top: 0;
             z-index: 50;
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
             background-color: white; 
         }
 
@@ -228,32 +228,31 @@
 </head>
 <body class="bg-gradient-to-br from-orange-50 via-white to-amber-50 min-h-screen">
     
-    <nav id="navbar" class="navbar-sticky">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
+    <nav id="navbar" class="navbar-sticky bg-white z-50 w-full">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-5 lg:py-6">
+            
+            <div class="flex items-center">
+                
+                <div class="flex-1 flex justify-start items-center gap-2">
                     <div class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                        <div class="w-7 h-7 md:w-8 md:h-8 border-2 border-amber-100 rounded-full flex items-center justify-center relative">
-                            <img src="Image/logo web.png" class="size-[30px]" alt="Logo">
+                        <div class="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center relative">
+                            <img src="Image/logo web.png" class="h-8 w-auto" alt="Logo">
                         </div>
                     </div>
+                    <span class="text-xl font-bold text-[#78350f]">Caveokka</span>
                 </div>
 
-                <div class="hidden lg:flex items-center gap-12">
-                    <a href="#home" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Beranda</a>
-                    <a href="#products" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Produk</a>
-                    <a href="#about" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Tentang Kami</a>
-                    <a href="#testimonials" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Testimoni</a>
-                    <a href="#contact" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap">Kontak</a>
+                <div class="hidden lg:flex items-center gap-8 xl:gap-12">
+                    <a href="#home" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap font-medium">Beranda</a>
+                    <a href="#products" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap font-medium">Produk</a>
+                    <a href="#about" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap font-medium">Tentang Kami</a>
+                    <a href="#testimonials" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap font-medium">Testimoni</a>
+                    <a href="#contact" class="nav-link text-base text-gray-600 hover:text-amber-900 transition-colors whitespace-nowrap font-medium">Kontak</a>
                 </div>
 
-                <div class="flex items-center gap-3 lg:gap-4">
-                    <button class="hidden sm:flex p-2 hover:bg-amber-100 rounded-full transition-colors">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
-                    <a id="cart-btn" href="Pembayaran/nota.html" class="flex p-2 hover:bg-amber-100 rounded-full transition-colors relative"">
+                <div class="flex-1 flex justify-end items-center gap-3 lg:gap-4">
+
+                    <a id="cart-btn" href="Pembayaran/nota.html" class="flex p-2 hover:bg-amber-100 rounded-full transition-colors relative">
                         <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
@@ -562,7 +561,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
-                        <span>Tambahkan ke Keranjang</span>
+                        <span>Tambahkan</span>
                     </button>
                 </div>
             </div>
@@ -573,7 +572,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="fade-in">
-                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-amber-900 mb-6">
+                    <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-amber-900 mb-6">
                         Tentang Caveokka
                     </h2>
                     <p class="text-gray-600 text-lg leading-relaxed mb-6">
@@ -608,7 +607,7 @@
 
     <section id="testimonials" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
         <div class="text-center mb-12 lg:mb-16 fade-in">
-            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-amber-900 mb-2">
+            <h2 class="text-2xl sm:text-5xl lg:text-6xl font-bold text-amber-900 mb-2">
                 Testimoni Pelanggan
             </h2>
             <p class="text-gray-600 text-md sm:text-lg max-w-2xl mx-auto">
@@ -728,7 +727,7 @@
 
     <section class="newsletter-bg py-16 sm:py-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 class="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
                 Dapatkan Promo Spesial
             </h2>
             <p class="text-amber-100 text-lg mb-8">
