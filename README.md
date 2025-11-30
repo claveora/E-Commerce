@@ -52,7 +52,7 @@ Anda hanya memerlukan browser web modern (seperti Chrome, Firefox, atau Edge).
 
 3.  **Jalankan Aplikasi:**
     * Cukup buka file **index.html** di browser Anda.
-    * (Disarankan): Gunakan ekstensi Live Server di VS Code atau sejenisnya untuk menjalankan proyek di server lokal (misalnya, http://127.0.0.1:5500/index.html).
+    * (Disarankan): Gunakan ekstensi Live Server di VS Code atau sejenisnya untuk menjalankan proyek di server lokal.
 
 📁 Struktur Proyek
 ------------------
