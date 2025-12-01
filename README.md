@@ -54,7 +54,7 @@ Anda hanya memerlukan browser web modern (seperti Chrome, Firefox, atau Edge).
     * Cukup buka file **index.html** di browser Anda.
     * (Disarankan): Gunakan ekstensi Live Server di VS Code atau sejenisnya untuk menjalankan proyek di server lokal.
 
-📁 Struktur Proyek
+## 📁 Struktur Proyek
 ------------------
 E-Commerce/
 ├── index.html          # Halaman utama (Home & Katalog Produk)
