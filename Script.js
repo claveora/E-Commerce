@@ -1,9 +1,3 @@
-// --- Script.js (FINAL & KONSOLIDASI) ---
-
-// =================================================================
-// FUNGSI UTILITY (Dapat dideklarasikan secara global)
-// =================================================================
-
 // 1. Ambil data lama jika ada saat halaman di-load
 let cart = JSON.parse(localStorage.getItem('caveokkaCart')) || [];
 
@@ -56,7 +50,7 @@ function updateCartDisplay() {
     }
 }
 
-// Fungsi untuk menutup modal (Perlu global karena dipanggil oleh event click dari HTML)
+// Fungsi untuk menutup modal
 function closeModal() {
     const modal = document.getElementById('product-modal');
     if (!modal) return;
@@ -116,9 +110,6 @@ function showProductModal(productName, description, price, imageSrc) {
 }
 
 
-// =================================================================
-// LOGIKA DOM (Semua yang mencari elemen HTML DITARUH DI SINI)
-// =================================================================
 document.addEventListener('DOMContentLoaded', () => {
     // Panggil cart display saat pertama load
     updateCartDisplay();
@@ -143,12 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Tutup menu mobile ketika link di dalamnya diklik (UX Improvement)
+        // Tutup menu mobile
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.remove('active');
-                // Pastikan ikon kembali ke hamburger
                 menuIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
             });
         });
@@ -265,15 +255,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-    
-    // 7. Menutup modal saat mengklik di luar konten modal
-    const productModal = document.getElementById('product-modal');
-    if (productModal) {
-        productModal.addEventListener('click', (e) => {
-            if (e.target.id === 'product-modal') {
-                closeModal();
-            }
-        });
-    }
-
 });

@@ -151,7 +151,7 @@ payBtn.addEventListener('click', () => {
                         confirmButtonColor: '#78350f',
                         confirmButtonText: 'Kembali ke Menu Utama'
                     }).then(() => {
-                        // 4. Reset Keranjang setelah bayar
+                        // 4. Reset Keran1jang setelah bayar
                         localStorage.removeItem(CART_KEY);
                         // Redirect ke index.html
                         window.location.href = '../index.html';
